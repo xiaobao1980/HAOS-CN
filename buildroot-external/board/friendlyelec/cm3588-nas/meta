@@ -1,0 +1,14 @@
+# FriendlyElec CM3588 NAS —— 板卡元数据
+# 派生自 panther_x2 / orangepi_cm4（Rockchip aarch64 参考模板）
+BOARD_ID=cm3588-nas
+BOARD_NAME="FriendlyElec CM3588 NAS"
+CHASSIS=embedded
+BOOTLOADER=uboot
+KERNEL_FILE=Image
+PARTITION_TABLE_TYPE=hybrid
+BOOT_SIZE=16M
+BOOT_SPL=true
+BOOT_SPL_SIZE=16M
+BOOT_ENV_SIZE=0x8000
+SUPERVISOR_MACHINE=green
+SUPERVISOR_ARCH=aarch64
