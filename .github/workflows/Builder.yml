@@ -3,14 +3,14 @@ on:
   workflow_dispatch:
     inputs:
       targets:
-        description: 'Targets to build (comma separated)'
+        description: 'RK3588 板卡名（逗号分隔，按板卡名选择要编的板）'
         required: false
-        default: 'rpi3_64,rpi4_64,rpi5_64,ova,generic_x86_64,generic_aarch64,green,yellow,panther_x2,orangepi_cm4,cm3588_nas'
+        default: 'cm3588_nas'
       run_tests:
-        description: 'Run QEMU boot tests after build (uses the ova image)'
+        description: '构建后运行 QEMU 启动测试（仅 ova 镜像；本分支只编板卡，默认关）'
         required: false
         type: boolean
-        default: true
+        default: false
 
 #  schedule:
 #    - cron: '0 18 26 * *'
@@ -31,7 +31,7 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             TARGETS="${{ github.event.inputs.targets }}"
           else
-            TARGETS="rpi3_64,rpi4_64,rpi5_64,ova,generic_x86_64,generic_aarch64,green,yellow,panther_x2,orangepi_cm4,cm3588_nas"
+            TARGETS="cm3588_nas"   # rk3588 分支：仅 RK3588 板卡（新增 RK3588 板卡时在此追加）
           fi
           JSON=$(echo "$TARGETS" | jq -R -c 'split(",")')
           echo "matrix=$JSON" >> $GITHUB_OUTPUT
