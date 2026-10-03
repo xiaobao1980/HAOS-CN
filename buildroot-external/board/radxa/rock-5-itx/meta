@@ -1,7 +1,7 @@
-# FriendlyElec CM3588 NAS —— 板卡元数据
-# 派生自 panther_x2 / orangepi_cm4（Rockchip aarch64 参考模板）
-BOARD_ID=cm3588-nas
-BOARD_NAME="FriendlyElec CM3588 NAS"
+# Radxa Rock 5 ITX —— 板卡元数据
+# 派生自 orangepi_cm4 / cm3588-nas（Rockchip aarch64 参考模板）
+BOARD_ID=rock-5-itx
+BOARD_NAME="Radxa Rock 5 ITX"
 CHASSIS=embedded
 BOOTLOADER=uboot
 KERNEL_FILE=Image

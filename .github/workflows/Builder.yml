@@ -2,10 +2,13 @@ name: Build Home Assistant Turbo
 on:
   workflow_dispatch:
     inputs:
-      targets:
-        description: 'RK3588 板卡名（逗号分隔，按板卡名选择要编的板）'
-        required: false
-        default: 'cm3588_nas'
+      board:
+        description: '要编译的板卡（RK3588 系列，按板卡名选择）'
+        required: true
+        type: choice
+        options:
+          - cm3588_nas
+          - rock_5_itx
       run_tests:
         description: '构建后运行 QEMU 启动测试（仅 ova 镜像；本分支只编板卡，默认关）'
         required: false
@@ -29,9 +32,9 @@ jobs:
       - id: set-matrix
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            TARGETS="${{ github.event.inputs.targets }}"
+            TARGETS="${{ github.event.inputs.board }}"
           else
-            TARGETS="cm3588_nas"   # rk3588 分支：仅 RK3588 板卡（新增 RK3588 板卡时在此追加）
+            TARGETS="cm3588_nas rock_5_itx"   # rk3588 分支：仅 RK3588 板卡（新增板卡时同步上方 inputs.board.options）
           fi
           JSON=$(echo "$TARGETS" | jq -R -c 'split(",")')
           echo "matrix=$JSON" >> $GITHUB_OUTPUT
