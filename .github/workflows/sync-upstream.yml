@@ -1,0 +1,45 @@
+name: Sync upstream → fork (dev)
+
+# 自动把上游 ha-china/HAOS-CN 的 dev 同步进你的 fork（xiaobao1980/HAOS-CN）的 dev。
+# 触发：每天北京时间约 10:17（UTC 02:17）自动跑一次，也可在 Actions 页面手动 “Run workflow”。
+# 凭据：直接用仓库自带的 GITHUB_TOKEN，无需额外 Secret。
+#
+# 同步策略：用 `git merge upstream/dev`（而非 reset --hard），这样 fork dev 上“仅本 fork 拥有”
+# 的提交（例如本工作流文件本身）不会被清掉；上游的新提交以 merge commit 形式合入。
+# 前提：你的开发/PR 仍走 feature 分支，不要直接往 dev 堆板卡改动（板卡走 add-cm3588-nas 分支）。
+
+on:
+  schedule:
+    - cron: '17 2 * * *'          # UTC 02:17 ≈ 北京时间 10:17
+  workflow_dispatch: {}          # 允许手动触发
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    # 只在你自己的 fork 上运行；别人再 fork 你的 fork 时不会误触发
+    if: github.repository == 'xiaobao1980/HAOS-CN'
+    steps:
+      - name: Checkout fork dev
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Configure git identity
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add upstream remote and fetch
+        run: |
+          git remote add upstream https://github.com/ha-china/HAOS-CN.git
+          git fetch upstream dev
+
+      - name: Merge upstream dev into fork dev
+        run: |
+          git merge --no-edit upstream/dev
+          git push origin dev
